@@ -65,7 +65,7 @@ let scanRoutesRegistered = false;
 
 // ── Chargement des routes de scan (CommonJS, pas d'import async) ──
 try {
-  const { registerScanRoutes } = require('./scan-routes.mjs');
+  const { registerScanRoutes } = require('./scan-routes.js');
   registerScanRoutes(app);
   scanRoutesRegistered = true;
   console.log('[INIT] ✓ Gemini scan routes loaded');
