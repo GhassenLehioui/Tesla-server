@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "name": "Centre de Charge Tunis",
+    "lat": 36.8065,
+    "lng": 10.1815,
+    "address": "Tunis, Tunisie"
+  },
+  {
+    "id": 2,
+    "name": "Centre de Charge Sfax",
+    "lat": 34.7406,
+    "lng": 10.7603,
+    "address": "Sfax, Tunisie"
+  },
+  {
+    "id": 3,
+    "name": "Centre de Charge Sousse",
+    "lat": 35.8256,
+    "lng": 10.6369,
+    "address": "Sousse, Tunisie"
+  },
+  {
+    "id": 4,
+    "name": "Centre de Charge Gabès",
+    "lat": 33.8815,
+    "lng": 10.0982,
+    "address": "Gabès, Tunisie"
+  },
+  {
+    "id": 5,
+    "name": "Centre de Charge Bizerte",
+    "lat": 37.2744,
+    "lng": 9.8739,
+    "address": "Bizerte, Tunisie"
+  }
+]

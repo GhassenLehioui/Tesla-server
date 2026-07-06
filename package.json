@@ -1,0 +1,37 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Tesla App Backend - MERN Stack with OpenAI GPT-4o Vision Integration",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "keywords": [
+    "tesla",
+    "mern",
+    "openai",
+    "gpt-4o-vision",
+    "vehicle-registration"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google/genai": "^2.10.0",
+    "cors": "^2.8.6",
+    "dotenv": "^16.4.5",
+    "express": "^5.2.1",
+    "multer": "^1.4.5-lts.1",
+    "openai": "^4.52.7",
+    "resend": "^1.1.0",
+    "tesseract.js": "^5.1.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GhassenLehioui/RESERVATION-TESLA-APP.git"
+  }
+}
