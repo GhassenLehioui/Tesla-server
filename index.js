@@ -12,9 +12,15 @@ const cors       = require("cors");
 const fs         = require("fs");
 const path       = require("path");
 const db         = require('./realtime');
-// Use Resend for transactional emails (reads key from process.env.RESEND_API_KEY)
-const { Resend } = require("resend");
-const resend = new Resend(process.env.RESEND_API_KEY );
+
+// Initialize Resend only if API key exists
+let resend = null;
+if (process.env.RESEND_API_KEY) {
+  const { Resend } = require("resend");
+  resend = new Resend(process.env.RESEND_API_KEY);
+} else {
+  console.warn('[WARN] RESEND_API_KEY not set — Email sending disabled');
+}
 
 const app = express();
 
@@ -27,7 +33,7 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
   'http://127.0.0.1:5173',
-  FRONTEND_URL
+  process.env.FRONTEND_URL
 ].filter(Boolean);
 
 const corsOptions = {
@@ -80,40 +86,6 @@ try {
     });
   });
 }
-
-(async () => {
-
-  // ── Middleware 404 JSON (doit être après toutes les routes) ──
-  // Évite qu'Express renvoie une page HTML pour les routes inconnues
-  app.use((req, res) => {
-    res.status(404).json({
-      success: false,
-      error: `Route not found: ${req.method} ${req.originalUrl}`,
-    });
-  });
-
-  // ── Middleware d'erreur global ──
-  // Attrape les erreurs non gérées et les retourne en JSON
-  app.use((err, req, res, _next) => {
-    console.error('[ERROR]', err.message);
-    res.status(err.status || 500).json({
-      success: false,
-      error: err.message || 'Internal server error',
-    });
-  });
-
-  // ── Démarrage du serveur ──
-  const PORT =3003;
-  app.listen(PORT, () => {
-    console.log(`\n Tesla App API démarrée sur port ${PORT}\n`);
-    console.log('[INFO] Features:');
-    console.log('  ✓ Car management');
-    console.log('  ✓ OTP authentication');
-    console.log('  ✓ Reservations');
-    console.log(`  ${scanRoutesRegistered ? '✓' : '✗'} Image scanning with Gemini 1.5 Flash`);
-    console.log(`  ${process.env.GEMINI_API_KEY ? '✓' : '✗'} Gemini API configured\n`);
-  });
-})();
 
 // ───────────────────────────────────────────────────────────────
 //  Mailer (Resend)
@@ -184,7 +156,7 @@ async function sendOTPEmail(toEmail, otp) {
       </div>
     `;
 
-  if (!process.env.RESEND_API_KEY || !RESEND_API_KEY) {
+  if (!process.env.RESEND_API_KEY || !resend) {
     console.log(`[OTP] RESEND_API_KEY not set — OTP for ${toEmail}: ${otp}`);
     return;
   }
@@ -681,6 +653,26 @@ app.get("/api/reservations/center/:centerId", async (req, res) => {
 
 
 
+// ── Middleware 404 JSON (doit être après toutes les routes) ──
+// Évite qu'Express renvoie une page HTML pour les routes inconnues
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    error: `Route not found: ${req.method} ${req.originalUrl}`,
+  });
+});
+
+// ── Middleware d'erreur global ──
+// Attrape les erreurs non gérées et les retourne en JSON
+app.use((err, req, res, _next) => {
+  console.error('[ERROR]', err.message);
+  res.status(err.status || 500).json({
+    success: false,
+    error: err.message || 'Internal server error',
+  });
+});
+
+// ── Démarrage du serveur ──
 const PORT = 3003;
 
 app.listen(PORT, () => {
@@ -689,6 +681,6 @@ app.listen(PORT, () => {
   console.log('  ✓ Car management');
   console.log('  ✓ OTP authentication');
   console.log('  ✓ Reservations');
-  console.log(`  ${scanRoutesRegistered ? '✓' : '✗'} Image scanning with GPT-4o Vision`);
-  console.log(`  ${process.env.OPENAI_API_KEY ? '✓' : '✗'} OpenAI API configured\n`);
+  console.log(`  ${scanRoutesRegistered ? '✓' : '✗'} Image scanning with Gemini 1.5 Flash`);
+  console.log(`  ${process.env.GEMINI_API_KEY ? '✓' : '✗'} Gemini API configured\n`);
 });
